@@ -23,7 +23,7 @@ const BookingModal = ({ date, treatment, refetch, setTreatment }) => {
             phone: e.target.phone.value
 
         }
-        fetch('http://localhost:5000/booking', {
+        fetch('https://pacific-cove-91872.herokuapp.com/booking', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
