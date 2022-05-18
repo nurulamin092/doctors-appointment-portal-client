@@ -35,7 +35,7 @@ function App() {
         </Route>
         <Route path='contract' element={<Contract />}></Route>
         <Route path='about' element={<About />}></Route>
-        <Route path='login' element={<Login />}></Route>
+        <Route path='/login' element={<Login />}></Route>
         <Route path='signup' element={<SignUp />}></Route>
       </Routes >
       <ToastContainer />
