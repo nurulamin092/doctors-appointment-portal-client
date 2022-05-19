@@ -5,9 +5,34 @@ import Loading from '../Shared/Loading';
 
 const AddDoctor = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const { data: services, isLoading } = useQuery('services', () => fetch(`http://localhost:5000/service`).then(res => res.json()));
+    const { data: services, isLoading } = useQuery('services', () =>
+        fetch(`http://localhost:5000/service`)
+            .then(res => res.json())
+    );
+    const imageStorageKey = '690263f590e66a3408ed89e8cb48a9e3';
     const onSubmit = async (data) => {
-        console.log('data', data);
+        const image = data.image[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    const img = result.data.url;
+                    const doctor = {
+                        name: data.name,
+                        email: data.email,
+                        specialty: data.specialty,
+                        img: img
+                    }
+                }
+                console.log('imagebb', result);
+            })
+
     };
     if (isLoading) {
         return <Loading></Loading>
@@ -64,7 +89,7 @@ const AddDoctor = () => {
                     <label className="label">
                         <span className="label-text">Specialty</span>
                     </label>
-                    <select {...register('specialty')} className="select w-full max-w-xs">
+                    <select {...register('specialty')} className="select input-bordered w-full max-w-xs">
                         {
                             services.map(service => <option key={service._id} value={service.name} >{service.name}</option>)
                         }
