@@ -1,8 +1,6 @@
 import React from 'react';
-import PrimaryButton from '../Shared/PrimaryButton';
-
 const Service = ({ service, setTreatment }) => {
-    const { name, slots } = service;
+    const { name, slots, price } = service;
     return (
 
         <div className="card lg:max-w-lg bg-base-100 shadow-xl">
@@ -14,6 +12,7 @@ const Service = ({ service, setTreatment }) => {
                             : <span className='text-red-500'>Tray another</span>
                     }
                 </p>
+                <p><small>Price: ${price}</small></p>
                 <p>{slots.length} {slots.length > 1 ? 'spaces' : 'spaces'} Available</p>
                 <div className="card-actions justify-center">
                     <label

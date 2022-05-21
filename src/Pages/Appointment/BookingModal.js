@@ -8,7 +8,7 @@ import auth from '../../firebase.init';
 const BookingModal = ({ date, treatment, refetch, setTreatment }) => {
     const [user] = useAuthState(auth);
     const formattedDate = format(date, 'PP');
-    const { _id, name, slots } = treatment;
+    const { _id, name, slots, price } = treatment;
     const handleBookingSlot = (e) => {
         e.preventDefault();
         const slot = e.target.slot.value;
@@ -18,6 +18,7 @@ const BookingModal = ({ date, treatment, refetch, setTreatment }) => {
             treatment: name,
             date: formattedDate,
             slot,
+            price,
             patient: user.email,
             patientName: user.displayName,
             phone: e.target.phone.value
@@ -51,6 +52,7 @@ const BookingModal = ({ date, treatment, refetch, setTreatment }) => {
                 <div className="modal-box">
                     <label htmlFor="booking-modal" className="btn btn-sm btn-circle absolute right-2 top-2">X</label>
                     <h3 className="font-bold text-lg text-secondary">Booking for : {name}</h3>
+                    {/* <h3 className="font-bold text-lg text-secondary">Booking Price : {price}</h3> */}
                     <form onSubmit={handleBookingSlot} className='grid grid-cols-1 gap-3 justify-items-center'>
                         <input type="text" disabled value={format(date, 'PP')} className="input input-bordered w-full max-w-xs" />
                         <select name='slot' className="select select-bordered w-full max-w-xs">
