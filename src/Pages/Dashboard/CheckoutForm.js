@@ -7,8 +7,10 @@ const CheckoutForm = ({ appointment }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [cardError, setCardError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [transactionId, setTransactionId] = useState('');
     const [clientSecret, setClientSecret] = useState('');
-    const { price } = appointment;
+    const { price, patientName, patient } = appointment;
     useEffect(() => {
         fetch('http://localhost:5000/create-payment-intent', {
             method: 'POST',
@@ -40,14 +42,33 @@ const CheckoutForm = ({ appointment }) => {
             type: 'card',
             card
         });
-        /*    if (error) {
-               setCardError(error.message)
-           }
-           else {
-               setCardError('');
-           } */
+
         setCardError(error?.message || '');
-        //     error ? setCardError(error.message) : setCardError('Payment ');
+
+        //confirm card payment
+        setSuccess('');
+        const { paymentIntent, error: intentError } = await stripe.confirmCardPayment(
+            clientSecret,
+            {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: patientName,
+                        email: patient
+                    },
+                },
+            },
+        )
+        if (intentError) {
+            setCardError(intentError?.message);
+
+        }
+        else {
+            setCardError('');
+            setTransactionId(paymentIntent.id);
+            console.log(paymentIntent);
+            setSuccess('Congrats! Your payment is completed.')
+        }
     }
     return (
         <>
@@ -74,6 +95,14 @@ const CheckoutForm = ({ appointment }) => {
             </form>
             {
                 cardError && <p className='text-red-500'>{cardError}</p>
+            }
+            {
+                success && <div className='text-green-500'>
+                    <p>{success}</p>
+                    <p>Your transaction id:
+                        <span className='text-orange-500 font-bold'>{transactionId}</span>
+                    </p>
+                </div>
             }
         </>
     );
